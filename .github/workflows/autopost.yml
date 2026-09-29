@@ -1,0 +1,75 @@
+name: Insta Auto Post
+
+on:
+  schedule:
+    # GitHub UTC time use karta hai. India time (IST) = UTC + 5:30
+    - cron: "40 4 * * *"    # roz ~10:10 AM IST  -> Product 1
+    - cron: "40 8 * * *"    # roz ~02:10 PM IST  -> Product 2
+    - cron: "40 13 * * *"   # roz ~07:10 PM IST  -> Product 3
+    - cron: "20 3 * * 1"    # har Monday ~08:50 AM IST -> token refresh
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Kya karna hai?"
+        required: true
+        default: "dry-run"
+        type: choice
+        options:
+          - dry-run   # sirf dikhao kya post hoga
+          - post      # abhi 1 product post karo
+          - check     # token aur product list check karo
+          - import    # Instagram ke purane posts se products.csv banao
+          - refresh   # token 60 din aur badhao
+
+permissions:
+  contents: write
+
+concurrency:
+  group: insta-autopost
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Decide action
+        id: act
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "action=${{ inputs.action }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "20 3 * * 1" ]; then
+            echo "action=refresh" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=post" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run autopost
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          NEW_TOKEN_FILE: ${{ runner.temp }}/new_token.txt
+        run: python autopost.py "${{ steps.act.outputs.action }}"
+
+      # Optional: agar GH_PAT secret daala hai to naya token apne aap secret mein save ho jayega
+      - name: Save refreshed token
+        if: steps.act.outputs.action == 'refresh'
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          TOKEN_FILE: ${{ runner.temp }}/new_token.txt
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "GH_PAT secret nahi hai - token refresh ho gaya, secret update skip."
+          elif [ -s "$TOKEN_FILE" ]; then
+            gh secret set IG_ACCESS_TOKEN --repo "${{ github.repository }}" < "$TOKEN_FILE"
+            echo "IG_ACCESS_TOKEN secret update ho gaya ✅"
+          fi
+          rm -f "$TOKEN_FILE"
