@@ -36,6 +36,8 @@ CONFIG_FILE = ROOT / "config.json"
 STATE_FILE = ROOT / "state.json"
 IMAGES_DIR = ROOT / "images"
 READY_DIR = ROOT / "ready"
+QUEUE_FILE = ROOT / "posts.json"
+POSTS_DIR = ROOT / "posts"
 
 API_VERSION = os.environ.get("IG_API_VERSION", "v23.0")
 GRAPH = f"https://graph.instagram.com/{API_VERSION}"
@@ -282,7 +284,75 @@ def pick_next(products, state):
     return idx, products[idx]
 
 
+def publish_image(img_path, caption):
+    """Photo ko GitHub ke public link se Instagram par post karta hai."""
+    sha = git_push(f"Photo ready: {img_path.name}", [img_path])
+    image_url = public_url(img_path, sha or git("rev-parse", "HEAD"))
+    for _ in range(12):
+        try:
+            if requests.head(image_url, timeout=20).status_code == 200:
+                break
+        except requests.RequestException:
+            pass
+        time.sleep(5)
+    else:
+        fail("Photo ka public link nahi khul raha. Repo PUBLIC hona chahiye.")
+    user = me()
+    ig_id = user["user_id"]
+    cid = api("POST", f"{ig_id}/media", image_url=image_url, caption=caption)["id"]
+    for _ in range(30):
+        status = api("GET", cid, fields="status_code,status").get("status_code")
+        if status == "FINISHED":
+            break
+        if status in ("ERROR", "EXPIRED"):
+            fail(f"Instagram ne photo reject kar di (status {status}).")
+        time.sleep(5)
+    media_id = api("POST", f"{ig_id}/media_publish", creation_id=cid)["id"]
+    link = api("GET", media_id, fields="permalink").get("permalink", "")
+    log(f"✅ Post ho gaya @{user.get('username')}: {link}")
+    return media_id, link
+
+
+def cmd_post_queue(dry=False):
+    """posts.json ki nayi posts ek-ek karke (repeat nahi)."""
+    cfg = load_config()
+    posts = json.loads(QUEUE_FILE.read_text(encoding="utf-8"))
+    state = load_json(STATE_FILE, {"history": []})
+    idx = state.get("next_post", 0)
+    last = state.get("last_posted_at")
+    if last and not dry and os.environ.get("GITHUB_EVENT_NAME") == "schedule":
+        gap = datetime.now(timezone.utc) - datetime.fromisoformat(last)
+        if gap < timedelta(minutes=cfg["min_gap_minutes"]):
+            log(f"Pichhla post sirf {int(gap.total_seconds() // 60)} min pehle hua tha - is baar skip.")
+            return
+    if idx >= len(posts):
+        fail(f"Saari {len(posts)} nayi posts ho chuki hain. Nayi posts banwaiye (posts.json + posts/ folder).")
+    p = posts[idx]
+    img = POSTS_DIR / f"{p['id']}.jpg"
+    if not img.exists():
+        fail(f"Post ki photo nahi mili: posts/{img.name}. 'Render posts' workflow chalaiye.")
+    log(f"Nayi post {idx + 1} of {len(posts)}: {p['id']}")
+    print("----- CAPTION -----\n" + p["caption"] + "\n-------------------", flush=True)
+    if dry:
+        log("DRY RUN - kuch post nahi kiya gaya. Agli 3 posts: " + ", ".join(q["id"] for q in posts[idx:idx + 3]))
+        return
+    media_id, link = publish_image(img, p["caption"][:2200])
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    state["next_post"] = idx + 1
+    state["last_posted_at"] = now
+    hist = state.setdefault("history", [])
+    hist.append({"at": now, "post": p["id"], "media_id": media_id, "link": link})
+    state["history"] = hist[-300:]
+    save_json(STATE_FILE, state)
+    git_push(f"Posted: {p['id']}", [STATE_FILE])
+    left = len(posts) - idx - 1
+    if left <= 6:
+        log(f"⚠️ Sirf {left} nayi posts bachi hain - jaldi nayi posts banwa lijiye.")
+
+
 def cmd_post(dry=False):
+    if QUEUE_FILE.exists():
+        return cmd_post_queue(dry)
     cfg = load_config()
     products = active_products()
     if not products:
@@ -365,6 +435,15 @@ def cmd_check():
     data = (lim.get("data") or [{}])[0]
     log(f"Pichhle 24 ghante mein API se posts: {data.get('quota_usage')} "
         f"(limit {data.get('config', {}).get('quota_total', '?')})")
+    if QUEUE_FILE.exists():
+        posts = json.loads(QUEUE_FILE.read_text(encoding="utf-8"))
+        st = load_json(STATE_FILE, {})
+        i = st.get("next_post", 0)
+        missing = [q["id"] for q in posts if not (POSTS_DIR / f"{q['id']}.jpg").exists()]
+        log(f"Nayi posts: {len(posts)} | ho chuki: {i} | baaki: {len(posts) - i}")
+        log("Photos missing: " + (", ".join(missing[:10]) if missing else "koi nahi ✅"))
+        log("Agli 3: " + ", ".join(q["id"] for q in posts[i:i + 3]))
+        return
     products = active_products()
     log(f"Active products: {len(products)}")
     missing = [p["image"] for p in products if not find_image(p["image"])]
