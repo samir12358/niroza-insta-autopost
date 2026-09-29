@@ -1,0 +1,41 @@
+name: Render posts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install tools
+        run: |
+          pip install playwright jinja2 pillow numpy scipy opencv-python-headless
+          python -m playwright install --with-deps chromium
+      - name: Get fonts
+        run: |
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/google/fonts /tmp/gf
+          cd /tmp/gf && git sparse-checkout set ofl/baloobhai2 ofl/hindvadodara ofl/poppins
+          mkdir -p /tmp/fonts
+          cp "/tmp/gf/ofl/baloobhai2/BalooBhai2[wght].ttf" /tmp/fonts/BalooBhai2.ttf
+          cp /tmp/gf/ofl/hindvadodara/HindVadodara-{Medium,SemiBold,Bold}.ttf /tmp/fonts/
+          cp /tmp/gf/ofl/poppins/Poppins-{SemiBold,Bold}.ttf /tmp/fonts/
+      - name: Build posts
+        run: |
+          python design/content.py
+          python design/render.py /tmp/fonts posts
+      - name: Save to repo
+        run: |
+          git config user.name insta-autopost-bot
+          git config user.email insta-autopost-bot@users.noreply.github.com
+          git add posts posts.json
+          git commit -m "Nayi posts render ki" || echo "no change"
+          git pull --rebase
+          git push
