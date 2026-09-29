@@ -49,8 +49,10 @@ def prepare(root: Path, out: Path):
             im = im.crop((0, 0, im.width, int(im.height * 0.975)))
         im.thumbnail((900, 1100))
         p = out / f"{name}.png"; im.save(p); res[name] = p
-    dg = _grabcut(root / "images" / "ig_18118521427538304.jpg", (0.575, 0.262, 0.945, 0.772))
+    dg = Image.open(root / "assets" / "digest_niroza.webp").convert("RGBA")
     p = out / "digest.png"; dg.save(p); res["digest"] = p
+    lg = Image.open(root / "assets" / "logo.webp").convert("RGBA")
+    p = out / "logo.png"; lg.save(p); res["logo"] = p
     return res
 
 

@@ -17,7 +17,7 @@ PRODUCTS = {
            "c": {"bg1": "#FFF3E4", "bg2": "#FFD9B0", "main": "#E8621A", "deep": "#6B2A0A", "acc": "#FFC23D", "soft": "#FFE1C2", "ink": "#3B2314"}},
     "b12": {"asset": "b12", "name": "Niroza Vitamin B12",
             "c": {"bg1": "#E8F6F3", "bg2": "#BFE6DE", "main": "#0E8C7F", "deep": "#0B4A44", "acc": "#FFC940", "soft": "#CFEEE8", "ink": "#12302D"}},
-    "dg": {"asset": "digest", "name": "Arogyam+ Digest Powder",
+    "dg": {"asset": "digest", "name": "Niroza Digest Powder",
            "c": {"bg1": "#F4F9E9", "bg2": "#DDEFC2", "main": "#4E8A1E", "deep": "#23480E", "acc": "#F5C331", "soft": "#E3F1CC", "ink": "#22321A"}},
 }
 
@@ -39,7 +39,7 @@ def main(fonts_dir, out_dir="posts", only=None):
                 continue
             prod = PRODUCTS[p["product"]]
             html = tpl.render(p=p, v=p.get("v", 0), c=prod["c"], prod=prod["asset"],
-                              prod_name=prod["name"], img=ready[prod["asset"]].as_uri(),
+                              prod_name=prod["name"], img=ready[prod["asset"]].as_uri(), logo=ready["logo"].as_uri(),
                               fonts=fonts_dir.as_uri())
             f = tmp / f"{p['id']}.html"
             f.write_text(html, encoding="utf-8")

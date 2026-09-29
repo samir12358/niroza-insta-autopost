@@ -147,7 +147,7 @@ DG = [
     dict(type="hero", v=0, tag="Digestion", kicker="આયુર્વેદ આધારિત", title=f"પાચન માટે<br>{H}ખાસ સાથી{E}",
          sub="વરિયાળી Flavour • Plant-Based",
          items=[["stomach", "પેટ ફૂલવામાં રાહત"], ["flame", "Acidity માં રાહત"], ["leaf", "ભૂખ વધારે"], ["heart", "હળવું પેટ"]],
-         badges=["100g Pack", "FSSAI મંજૂર"]),
+         badges=["100g Pack", "Nutraceutical"]),
     dict(type="fact", v=2, title=f"આયુર્વેદમાં સારું પાચન એટલે મજબૂત {H}'અગ્નિ'{E}",
          body="પાચન-અગ્નિ સારો હોય તો શરીર ખોરાકમાંથી પૂરું પોષણ લઈ શકે છે."),
     dict(type="checklist", v=0, kicker="જમ્યા પછી…", title=f"આમાંથી કંઈ<br>{H}થાય છે?{E}",
@@ -185,7 +185,7 @@ DG = [
          fact="Cold drinks થી ગેસ વધી શકે છે. હુંફાળું પાણી અને સંતુલિત ભોજન વધુ સારો વિકલ્પ છે."),
     dict(type="steps", v=2, kicker="Gut-Friendly Routine", title=f"સારા પાચન માટે<br>{H}3 આદત{E}",
          steps=["ધીમે ધીમે ચાવીને જમો", "જમ્યા પછી 10 મિનિટ ચાલો", "Digest Powder — હુંફાળા પાણી સાથે"]),
-    dict(type="cta", v=0, kicker="પાચન માટે ખાસ", title=f"Arogyam+<br>{H}Digest Powder{E}",
+    dict(type="cta", v=0, kicker="પાચન માટે ખાસ", title=f"Niroza<br>{H}Digest Powder{E}",
          items=["Plant-Based", "વરિયાળી Flavour", "100g Pack", "Gas માં રાહત", "Acidity માં રાહત", "સરળ ઉપયોગ"]),
     # ---- cycle 3
     dict(type="hero", v=1, tag="Festive Care", kicker="તહેવારોની મોસમ", title=f"મીઠાઈ પછી પણ<br>{H}હળવું પેટ{E}",
@@ -207,7 +207,7 @@ DG = [
          fact="વારંવાર ભોજન છોડવાથી acidity વધી શકે છે — નિયમિત સમયે હળવું ભોજન લો."),
     dict(type="steps", v=0, kicker="Festive Digestion Tips", title=f"તહેવારમાં<br>{H}પેટ સંભાળો{E}",
          steps=["મીઠાઈ-ફરસાણ માપસર", "ભોજન વચ્ચે પૂરતો gap", "જમ્યા પછી Digest Powder"]),
-    dict(type="cta", v=2, kicker="FSSAI મંજૂર • Plant-Based", title=f"પાચનનો<br>{H}Perfect સાથી{E}",
+    dict(type="cta", v=2, kicker="Plant-Based • Nutraceutical", title=f"પાચનનો<br>{H}Perfect સાથી{E}",
          items=["Gas માં રાહત", "Acidity માં રાહત", "પેટ હળવું", "ભૂખ વધારે", "કબજિયાતમાં સહાયક", "દૈનિક પાચન"]),
 ]
 
@@ -218,16 +218,16 @@ PROD_LINES = {
     "b12": ["💚 Niroza Plant-Based Vitamin B12 — Moringa, Amla અને Barley Grass સાથે.",
             "💚 Niroza Vitamin B12 — Energy અને Nerve Health માટે 100% Plant-Based સાથ.",
             "💚 Vegetarian છો? Niroza Plant-Based B12 તમારા રોજના પોષણ માટે."],
-    "dg": ["🌿 Arogyam+ Digest Powder — ગેસ, એસિડિટી અને ભારેપણામાં રાહત માટે આયુર્વેદ આધારિત.",
-           "🌿 Arogyam+ Digest Powder — વરિયાળી flavour સાથે પાચનનો Perfect સાથી.",
-           "🌿 જમ્યા પછી 1 ચમચી Arogyam+ Digest Powder — હળવું પેટ, ખુશ મન."],
+    "dg": ["🌿 Niroza Digest Powder — ગેસ, એસિડિટી અને ભારેપણામાં રાહત માટે આયુર્વેદ આધારિત.",
+           "🌿 Niroza Digest Powder — વરિયાળી flavour સાથે પાચનનો Perfect સાથી.",
+           "🌿 જમ્યા પછી 1 ચમચી Niroza Digest Powder — હળવું પેટ, ખુશ મન."],
 }
 TAGS = {
     "sb": ["#Niroza", "#NirozaAyurvedic", "#SeaBuckthorn", "#ImmunityBoost", "#SkinGlow", "#HairCare", "#Omega7", "#VitaminC",
            "#NaturalWellness", "#HealthyLifestyle", "#GujaratiHealth", "#Superfruit", "#Nutraceutical", "#Surat", "#Gujarat"],
     "b12": ["#Niroza", "#NirozaAyurvedic", "#VitaminB12", "#PlantBased", "#EnergyBoost", "#NerveHealth", "#Vegan", "#Moringa",
             "#Amla", "#HealthyLifestyle", "#GujaratiHealth", "#Vegetarian", "#Wellness", "#Surat", "#Gujarat"],
-    "dg": ["#Niroza", "#NirozaAyurvedic", "#Arogyam", "#DigestPowder", "#GutHealth", "#AcidityRelief", "#GasRelief", "#HealthyDigestion",
+    "dg": ["#Niroza", "#NirozaAyurvedic", "#NirozaDigestPowder", "#DigestPowder", "#GutHealth", "#AcidityRelief", "#GasRelief", "#HealthyDigestion",
            "#Ayurveda", "#AyurvedicHealth", "#GujaratiHealth", "#NaturalWellness", "#Surat", "#Gujarat", "#Pachan"],
 }
 EMO = {"hero": "🌿", "fact": "💡", "checklist": "🤔", "tip": "✅", "spotlight": "🔍", "faq": "❓",

@@ -29,10 +29,9 @@ body {
 .leaf { width: 260px; opacity: {% if v == 1 %}.12{% else %}.22{% endif %}; }
 
 /* header */
-.top { position: absolute; left: 64px; right: 64px; top: 52px; display: flex; align-items: center; justify-content: space-between; }
-.brand { font-family: "Poppins"; font-weight: 700; font-size: 30px; letter-spacing: .5px; color: var(--deep); display: flex; align-items: center; gap: 12px; }
-.dark .brand { color: #fff; }
-.brand svg { width: 40px; height: 40px; }
+.top { position: absolute; left: 64px; right: 64px; top: 36px; display: flex; align-items: center; justify-content: space-between; }
+.brand { background: #fff; border-radius: 26px; padding: 10px 22px; box-shadow: 0 8px 24px rgba(0,0,0,.10); display: flex; }
+.brand img { height: 96px; display: block; }
 .tag { font-family: "Baloo Bhai 2"; font-weight: 700; font-size: 26px; padding: 8px 22px 6px; border-radius: 40px; background: var(--main); color: #fff; }
 .dark .tag { background: #fff; color: var(--deep); }
 
@@ -45,7 +44,7 @@ h1 .hl { color: var(--main); }
 .sub { font-weight: 600; font-size: 34px; line-height: 1.4; color: var(--ink); opacity: .9; }
 .dark .sub { color: #fff; }
 
-.content { position: absolute; left: 64px; right: 64px; top: 140px; }
+.content { position: absolute; left: 64px; right: 64px; top: 178px; }
 
 /* product */
 .prod { position: absolute; filter: drop-shadow(0 30px 40px rgba(0,0,0,.28)); }
@@ -90,10 +89,7 @@ h1 .hl { color: var(--main); }
 <svg class="deco leaf" style="right:-60px; bottom:220px; transform: rotate(200deg); width: 200px" viewBox="0 0 100 100"><path d="M10 90 C10 40 40 10 90 10 C90 60 60 90 10 90 Z" fill="{% if v == 1 %}#fff{% else %}var(--main){% endif %}"/></svg>
 
 <div class="top">
-  <div class="brand">
-    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="{% if v == 1 %}#fff{% else %}var(--main){% endif %}"/><path d="M12 27 C12 17 18 11 28 11 C28 21 22 27 12 27 Z" fill="{% if v == 1 %}var(--main){% else %}#fff{% endif %}"/></svg>
-    NIROZA AYURVEDIC
-  </div>
+  <div class="brand"><img src="{{ logo }}" alt="Niroza"></div>
   {% if p.tag %}<div class="tag">{{ p.tag }}</div>{% endif %}
 </div>
 
