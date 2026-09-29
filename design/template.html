@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "Baloo Bhai 2"; src: url("{{ fonts }}/BalooBhai2.ttf"); font-weight: 400 800; }
+@font-face { font-family: "Hind Vadodara"; src: url("{{ fonts }}/HindVadodara-Medium.ttf"); font-weight: 500; }
+@font-face { font-family: "Hind Vadodara"; src: url("{{ fonts }}/HindVadodara-SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Hind Vadodara"; src: url("{{ fonts }}/HindVadodara-Bold.ttf"); font-weight: 700; }
+@font-face { font-family: "Poppins"; src: url("{{ fonts }}/Poppins-SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Poppins"; src: url("{{ fonts }}/Poppins-Bold.ttf"); font-weight: 700; }
+
+:root {
+  --bg1: {{ c.bg1 }}; --bg2: {{ c.bg2 }}; --main: {{ c.main }}; --deep: {{ c.deep }};
+  --acc: {{ c.acc }}; --soft: {{ c.soft }}; --ink: {{ c.ink }};
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1350px; }
+body {
+  font-family: "Hind Vadodara", "Baloo Bhai 2", sans-serif; color: var(--ink);
+  position: relative; overflow: hidden;
+  background: {% if v == 1 %}linear-gradient(160deg, var(--deep) 0%, var(--main) 100%){% elif v == 2 %}linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 55%, var(--bg2) 100%){% else %}radial-gradient(circle at 75% 35%, #fff 0%, var(--bg1) 45%, var(--bg2) 100%){% endif %};
+}
+.dark { color: #fff; }
+.deco { position: absolute; pointer-events: none; }
+.blob1 { width: 760px; height: 760px; border-radius: 50%; right: -260px; top: 170px;
+  background: radial-gradient(circle, {% if v == 1 %}rgba(255,255,255,.18){% else %}rgba(255,255,255,.95){% endif %} 0%, rgba(255,255,255,0) 68%); }
+.blob2 { width: 520px; height: 520px; border-radius: 50%; left: -220px; bottom: 120px; background: var(--soft); opacity: {% if v == 1 %}.10{% else %}.55{% endif %}; }
+.leaf { width: 260px; opacity: {% if v == 1 %}.12{% else %}.22{% endif %}; }
+
+/* header */
+.top { position: absolute; left: 64px; right: 64px; top: 52px; display: flex; align-items: center; justify-content: space-between; }
+.brand { font-family: "Poppins"; font-weight: 700; font-size: 30px; letter-spacing: .5px; color: var(--deep); display: flex; align-items: center; gap: 12px; }
+.dark .brand { color: #fff; }
+.brand svg { width: 40px; height: 40px; }
+.tag { font-family: "Baloo Bhai 2"; font-weight: 700; font-size: 26px; padding: 8px 22px 6px; border-radius: 40px; background: var(--main); color: #fff; }
+.dark .tag { background: #fff; color: var(--deep); }
+
+.kicker { font-family: "Baloo Bhai 2"; font-weight: 700; font-size: 34px; color: var(--main); margin-bottom: 6px; }
+.dark .kicker { color: var(--acc); }
+h1 { font-family: "Baloo Bhai 2"; font-weight: 800; line-height: 1.12; color: var(--deep); }
+.dark h1 { color: #fff; }
+h1 .hl { color: var(--main); }
+.dark h1 .hl { color: var(--acc); }
+.sub { font-weight: 600; font-size: 34px; line-height: 1.4; color: var(--ink); opacity: .9; }
+.dark .sub { color: #fff; }
+
+.content { position: absolute; left: 64px; right: 64px; top: 140px; }
+
+/* product */
+.prod { position: absolute; filter: drop-shadow(0 30px 40px rgba(0,0,0,.28)); }
+.plate { position: absolute; border-radius: 50%; background: radial-gradient(ellipse, rgba(0,0,0,.28), rgba(0,0,0,0) 70%); }
+.ring { position: absolute; border-radius: 50%; background: radial-gradient(circle, #fff 0%, rgba(255,255,255,.0) 70%); }
+
+/* list items */
+.items { display: flex; flex-direction: column; gap: 22px; }
+.item { display: flex; align-items: center; gap: 20px; font-weight: 700; font-size: 36px; line-height: 1.25; color: var(--deep); }
+.dark .item { color: #fff; }
+.ic { flex: 0 0 64px; height: 64px; border-radius: 50%; background: var(--main); display: grid; place-items: center; box-shadow: 0 8px 18px rgba(0,0,0,.15); }
+.dark .ic { background: #fff; }
+.ic svg { width: 36px; height: 36px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.dark .ic svg { stroke: var(--deep); }
+
+.card { background: rgba(255,255,255,.92); border-radius: 36px; padding: 44px 48px; box-shadow: 0 20px 50px rgba(0,0,0,.12); }
+.dark .card { background: rgba(255,255,255,.96); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+.dark .card .item { color: var(--deep); }
+
+/* footer CTA */
+.cta { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; background: var(--deep); color: #fff;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 64px; }
+.dark .cta { background: rgba(0,0,0,.28); }
+.cta .l { font-family: "Baloo Bhai 2"; font-weight: 700; font-size: 32px; line-height: 1.2; }
+.cta .l small { display: block; font-family: "Hind Vadodara"; font-weight: 600; font-size: 24px; opacity: .85; }
+.cta .phone { display: flex; align-items: center; gap: 16px; background: var(--acc); color: var(--deep); border-radius: 60px; padding: 14px 32px 12px 18px;
+  font-family: "Poppins"; font-weight: 700; font-size: 38px; }
+.cta .phone .pi { width: 56px; height: 56px; border-radius: 50%; background: var(--deep); display: grid; place-items: center; }
+.cta .phone svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+.pill { display: inline-block; font-family: "Baloo Bhai 2"; font-weight: 700; font-size: 30px; padding: 10px 28px 6px; border-radius: 40px; background: var(--soft); color: var(--deep); }
+.dark .pill { background: rgba(255,255,255,.18); color: #fff; }
+.pname { font-family: "Poppins"; font-weight: 700; font-size: 30px; color: var(--main); letter-spacing: .3px; }
+.dark .pname { color: var(--acc); }
+</style>
+</head>
+<body class="{% if v == 1 %}dark{% endif %}">
+
+<div class="deco blob1"></div>
+<div class="deco blob2"></div>
+<svg class="deco leaf" style="left:-40px; top:-30px; transform: rotate(20deg)" viewBox="0 0 100 100"><path d="M10 90 C10 40 40 10 90 10 C90 60 60 90 10 90 Z" fill="{% if v == 1 %}#fff{% else %}var(--main){% endif %}"/><path d="M10 90 L70 30" stroke="{% if v == 1 %}var(--deep){% else %}#fff{% endif %}" stroke-width="2" fill="none"/></svg>
+<svg class="deco leaf" style="right:-60px; bottom:220px; transform: rotate(200deg); width: 200px" viewBox="0 0 100 100"><path d="M10 90 C10 40 40 10 90 10 C90 60 60 90 10 90 Z" fill="{% if v == 1 %}#fff{% else %}var(--main){% endif %}"/></svg>
+
+<div class="top">
+  <div class="brand">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="{% if v == 1 %}#fff{% else %}var(--main){% endif %}"/><path d="M12 27 C12 17 18 11 28 11 C28 21 22 27 12 27 Z" fill="{% if v == 1 %}var(--main){% else %}#fff{% endif %}"/></svg>
+    NIROZA AYURVEDIC
+  </div>
+  {% if p.tag %}<div class="tag">{{ p.tag }}</div>{% endif %}
+</div>
+
+{% macro icon(name) -%}
+<svg viewBox="0 0 24 24">
+{%- if name == 'check' %}<path d="M5 12.5l4.5 4.5L19 7.5"/>
+{%- elif name == 'bolt' %}<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>
+{%- elif name == 'shield' %}<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>
+{%- elif name == 'heart' %}<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
+{%- elif name == 'leaf' %}<path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14z"/><path d="M5 19L14 10"/>
+{%- elif name == 'sparkle' %}<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M18 6l-3 3M9 15l-3 3"/>
+{%- elif name == 'brain' %}<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4z"/>
+{%- elif name == 'drop' %}<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>
+{%- elif name == 'sun' %}<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>
+{%- elif name == 'moon' %}<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>
+{%- elif name == 'stomach' %}<path d="M9 3v4c0 2-3 3-3 7a6 6 0 0 0 11 3c1-2 3-2 3-5 0-2-2-3-4-2-2 1-3 0-3-2V3"/>
+{%- elif name == 'flame' %}<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 2 3-3z"/>
+{%- elif name == 'hair' %}<path d="M6 20c0-8 1-14 6-16 5 2 6 8 6 16"/><path d="M10 20c0-6 0-10 2-13M14 20c0-6 0-10-2-13"/>
+{%- elif name == 'bone' %}<path d="M7 7a2 2 0 1 0-3 2l2 2 5 5 2 2a2 2 0 1 0 2-3l3-3a2 2 0 1 0 2-3 2 2 0 1 0-3-2l-3 3a2 2 0 1 0-3 2"/>
+{%- elif name == 'eye' %}<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
+{%- elif name == 'water' %}<path d="M7 3h10l-1.5 17a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2z"/><path d="M8 9h8"/>
+{%- elif name == 'walk' %}<circle cx="13" cy="4" r="2"/><path d="M10 21l2-6-2-3 1-5 4 3 3 1M10 12l-3 2"/>
+{%- elif name == 'clock' %}<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+{%- elif name == 'phone' %}<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+{%- elif name == 'x' %}<path d="M6 6l12 12M18 6L6 18"/>
+{%- elif name == 'star' %}<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>
+{%- else %}<circle cx="12" cy="12" r="5"/>
+{%- endif %}
+</svg>
+{%- endmacro %}
+
+{# ---------------- LAYOUTS ---------------- #}
+{% if p.type == 'hero' %}
+  <div class="content">
+    <div class="kicker">{{ p.kicker }}</div>
+    <h1 style="font-size: 84px;">{{ p.title|safe }}</h1>
+    {% if p.sub %}<div class="sub" style="margin-top:14px; max-width: 900px">{{ p.sub }}</div>{% endif %}
+  </div>
+  <div class="items" style="position:absolute; left:64px; top:{{ 520 if p.sub else 470 }}px; width: 540px;">
+    {% for it in p['items'] %}<div class="item"><span class="ic">{{ icon(it[0]) }}</span><span>{{ it[1] }}</span></div>{% endfor %}
+  </div>
+  <div style="position:absolute; left:64px; top:{{ 520 + p['items']|length * 86 + 60 if p.sub else 470 + p['items']|length * 86 + 60 }}px; display:flex; flex-wrap:wrap; gap:14px; width:520px;">
+    {% for b in (p.badges or []) %}<span class="pill">{{ b }}</span>{% endfor %}
+  </div>
+  <div class="ring" style="width:620px;height:620px;right:-40px;top:470px;"></div>
+  <div class="plate" style="width:420px;height:70px;right:90px;top:1085px;"></div>
+  <img class="prod" src="{{ img }}" style="height:620px; right:{{ 70 if prod == 'digest' else 90 }}px; top:470px;">
+
+{% elif p.type == 'fact' %}
+  <div class="content">
+    <span class="pill">{{ p.kicker or 'શું તમે જાણો છો?' }}</span>
+    <h1 style="font-size: 80px; margin-top: 30px;">{{ p.title|safe }}</h1>
+  </div>
+  <div class="card" style="position:absolute; left:64px; top:{{ p.card_top or 580 }}px; width: 580px;">
+    <div class="sub" style="font-size:40px; line-height:1.45; font-weight:600; color: var(--ink)">{{ p.body|safe }}</div>
+  </div>
+  <div class="ring" style="width:600px;height:600px;right:-80px;top:520px;"></div>
+  <div class="plate" style="width:360px;height:64px;right:70px;top:1110px;"></div>
+  <img class="prod" src="{{ img }}" style="height:580px; right:50px; top:545px;">
+
+{% elif p.type == 'checklist' %}
+  <div class="content">
+    <div class="kicker">{{ p.kicker }}</div>
+    <h1 style="font-size: 78px;">{{ p.title|safe }}</h1>
+  </div>
+  <div class="card items" style="position:absolute; left:64px; top:470px; width: 620px; gap: 26px; padding: 40px 40px;">
+    {% for it in p['items'] %}<div class="item" style="color: var(--deep)"><span class="ic" style="background: var(--main)">{{ icon('check') }}</span><span>{{ it }}</span></div>{% endfor %}
+  </div>
+  <div class="sub" style="position:absolute; left:64px; top:{{ 520 + p['items']|length * 102 + 40 }}px; width: 620px; font-weight:700; color: {% if v == 1 %}#fff{% else %}var(--deep){% endif %}">{{ p.sub|safe }}</div>
+  <div class="plate" style="width:300px;height:56px;right:40px;top:1100px;"></div>
+  <img class="prod" src="{{ img }}" style="height:500px; right:30px; top:610px;">
+
+{% elif p.type == 'spotlight' %}
+  <div class="content" style="text-align:center;">
+    <div class="kicker">{{ p.kicker }}</div>
+    <h1 style="font-size: 74px;">{{ p.title|safe }}</h1>
+  </div>
+  <div style="position:absolute; left:50%; top:420px; transform:translateX(-50%); width:400px; height:400px; border-radius:50%;
+       background: var(--main); display:grid; place-items:center; box-shadow: 0 0 0 26px rgba(255,255,255,.55), 0 30px 60px rgba(0,0,0,.18);">
+    <div style="text-align:center; color:#fff;">
+      <div style="font-family:'Poppins','Baloo Bhai 2'; font-weight:700; font-size:{{ p.big_size or 110 }}px; line-height:1;">{{ p.big }}</div>
+      {% if p.big_sub %}<div style="font-family:'Baloo Bhai 2'; font-weight:700; font-size:34px; margin-top:10px;">{{ p.big_sub }}</div>{% endif %}
+    </div>
+  </div>
+  <div class="card" style="position:absolute; left:64px; top:880px; width: 620px; padding: 34px 40px;">
+    <div class="sub" style="font-size:34px; color: var(--ink)">{{ p.body|safe }}</div>
+  </div>
+  <img class="prod" src="{{ img }}" style="height:360px; right:64px; top:830px;">
+
+{% elif p.type == 'tip' %}
+  <div class="content">
+    <span class="pill">{{ p.kicker or 'આજની હેલ્થ ટિપ' }}</span>
+  </div>
+  <div style="position:absolute; left:64px; top:250px; width:180px; height:180px; border-radius:40px; background: var(--main); display:grid; place-items:center; transform: rotate(-6deg); box-shadow: 0 20px 40px rgba(0,0,0,.15)">
+    <div class="ic" style="width:120px;height:120px;background:transparent;box-shadow:none;">{{ icon(p.icon or 'leaf') | replace('<svg ', '<svg style="width:110px;height:110px;stroke:#fff" ') | safe }}</div>
+  </div>
+  <div style="position:absolute; left:64px; right:64px; top:480px;">
+    <h1 style="font-size: 80px;">{{ p.title|safe }}</h1>
+    <div class="sub" style="margin-top:28px; font-size:38px; max-width: 900px;">{{ p.body|safe }}</div>
+  </div>
+  <div style="position:absolute; right:64px; top:{{ p.prod_top or 760 }}px; display:flex; align-items:flex-end; gap:24px;">
+    <div style="text-align:right; margin-bottom: 40px;"><div class="pname">{{ prod_name }}</div><div class="sub" style="font-size:26px">{{ p.pair or '' }}</div></div>
+    <img class="prod" src="{{ img }}" style="position:static; height:{{ p.prod_h or 400 }}px;">
+  </div>
+
+{% elif p.type == 'quote' %}
+  <div style="position:absolute; left:64px; right:64px; top:230px; text-align:center;">
+    <div style="font-family:'Poppins'; font-weight:700; font-size:260px; line-height:.7; color: var(--main); opacity:.9;">“</div>
+    <h1 style="font-size: 82px; margin-top: 20px;">{{ p.title|safe }}</h1>
+    {% if p.body %}<div class="sub" style="margin-top:34px; font-size:38px;">{{ p.body|safe }}</div>{% endif %}
+  </div>
+  <div style="position:absolute; left:0; right:0; top:{{ p.prod_top or 860 }}px; display:flex; justify-content:center; align-items:center; gap:30px;">
+    <img class="prod" src="{{ img }}" style="position:static; height:290px;">
+    <div><div class="pname">{{ prod_name }}</div><div class="sub" style="font-size:28px">{{ p.pair or '' }}</div></div>
+  </div>
+
+{% elif p.type == 'steps' %}
+  <div class="content">
+    <div class="kicker">{{ p.kicker }}</div>
+    <h1 style="font-size: 78px;">{{ p.title|safe }}</h1>
+  </div>
+  <div style="position:absolute; left:64px; top:{{ p.steps_top or 440 }}px; width: 640px; display:flex; flex-direction:column; gap: 26px;">
+    {% for s in p.steps %}
+    <div class="card" style="display:flex; gap:26px; align-items:center; padding: 28px 34px;">
+      <div style="flex:0 0 84px; height:84px; border-radius:24px; background: var(--main); color:#fff; font-family:'Poppins'; font-weight:700; font-size:46px; display:grid; place-items:center;">{{ loop.index }}</div>
+      <div style="font-weight:700; font-size:34px; line-height:1.3; color: var(--deep)">{{ s|safe }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="plate" style="width:300px;height:56px;right:40px;top:1110px;"></div>
+  <img class="prod" src="{{ img }}" style="height:470px; right:40px; top:640px;">
+
+{% elif p.type == 'faq' %}
+  <div class="content"><span class="pill">{{ p.kicker or 'તમારો સવાલ, અમારો જવાબ' }}</span></div>
+  <div style="position:absolute; left:64px; right:64px; top:250px;">
+    <div style="display:flex; gap:22px; align-items:flex-start;">
+      <div style="flex:0 0 90px;height:90px;border-radius:50%;background:var(--deep);color:#fff;font-family:'Poppins';font-weight:700;font-size:50px;display:grid;place-items:center;">Q</div>
+      <h1 style="font-size: 66px; padding-top: 6px;">{{ p.title|safe }}</h1>
+    </div>
+    <div class="card" style="margin-top: 44px; margin-left: 60px; display:flex; gap:22px; align-items:flex-start; width: 640px;">
+      <div style="flex:0 0 76px;height:76px;border-radius:50%;background:var(--main);color:#fff;font-family:'Poppins';font-weight:700;font-size:42px;display:grid;place-items:center;">A</div>
+      <div class="sub" style="font-size:38px; line-height:1.45; color: var(--ink)">{{ p.body|safe }}</div>
+    </div>
+  </div>
+  <div class="plate" style="width:300px;height:54px;right:40px;top:1115px;"></div>
+  <img class="prod" src="{{ img }}" style="height:470px; right:40px; top:{{ p.prod_top or 650 }}px;">
+
+{% elif p.type == 'myth' %}
+  <div class="content" style="text-align:center"><div class="kicker">{{ p.kicker or 'માન્યતા vs હકીકત' }}</div>
+    <h1 style="font-size: 70px;">{{ p.title|safe }}</h1></div>
+  <div style="position:absolute; left:64px; right:64px; top:{{ p.box_top or 420 }}px; display:flex; flex-direction:column; gap:30px;">
+    <div class="card" style="border-left: 16px solid #D64545; padding: 34px 40px;">
+      <div style="display:flex; align-items:center; gap:14px; font-family:'Baloo Bhai 2'; font-weight:800; font-size:40px; color:#D64545;">
+        <span class="ic" style="background:#D64545; flex-basis:56px; height:56px">{{ icon('x') }}</span> માન્યતા (Myth)</div>
+      <div class="sub" style="margin-top:12px; font-size:36px; color: var(--ink)">{{ p.myth|safe }}</div>
+    </div>
+    <div class="card" style="border-left: 16px solid #2E9E5B; padding: 34px 40px; width: 700px;">
+      <div style="display:flex; align-items:center; gap:14px; font-family:'Baloo Bhai 2'; font-weight:800; font-size:40px; color:#2E9E5B;">
+        <span class="ic" style="background:#2E9E5B; flex-basis:56px; height:56px">{{ icon('check') }}</span> હકીકત (Fact)</div>
+      <div class="sub" style="margin-top:12px; font-size:36px; color: var(--ink)">{{ p.fact|safe }}</div>
+    </div>
+  </div>
+  <img class="prod" src="{{ img }}" style="height:330px; right:40px; top:{{ p.prod_top or 860 }}px;">
+
+{% elif p.type == 'cta' %}
+  <div class="content" style="text-align:center">
+    <div class="kicker">{{ p.kicker }}</div>
+    <h1 style="font-size: 88px;">{{ p.title|safe }}</h1>
+    {% if p.sub %}<div class="sub" style="margin-top:12px;">{{ p.sub }}</div>{% endif %}
+  </div>
+  <div class="ring" style="width:720px;height:720px;left:180px;top:380px;"></div>
+  <div class="plate" style="width:460px;height:80px;left:310px;top:1085px;"></div>
+  <img class="prod" src="{{ img }}" style="height:600px; left:50%; transform:translateX(-50%); top:{{ p.prod_top or 480 }}px;">
+  {% if p['items'] %}
+  <div style="position:absolute; left:40px; top:560px; display:flex; flex-direction:column; gap:20px;">
+    {% for it in p['items'][:3] %}<span class="pill" style="background:#fff; box-shadow:0 8px 20px rgba(0,0,0,.1); color: var(--deep)">✓ {{ it }}</span>{% endfor %}
+  </div>
+  <div style="position:absolute; right:40px; top:620px; display:flex; flex-direction:column; gap:20px; align-items:flex-end;">
+    {% for it in p['items'][3:6] %}<span class="pill" style="background:#fff; box-shadow:0 8px 20px rgba(0,0,0,.1); color: var(--deep)">✓ {{ it }}</span>{% endfor %}
+  </div>
+  {% endif %}
+{% endif %}
+
+<div class="cta">
+  <div class="l">{{ p.cta or 'આજે જ ઓર્ડર કરો' }}<small>{{ p.cta_small or 'WhatsApp / Call કરો • હોમ ડિલિવરી ઉપલબ્ધ' }}</small></div>
+  <div class="phone"><span class="pi">{{ icon('phone') }}</span>+91 72111 69006</div>
+</div>
+</body>
+</html>
